@@ -1,5 +1,6 @@
 package com.felipecoronado.tcsbikepoc
 
+import NavGraph
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,39 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.felipecoronado.tcsbikepoc.notification.CountdownNotification
+import com.felipecoronado.tcsbikepoc.ui.login.LoginScreen
 import com.felipecoronado.tcsbikepoc.ui.theme.TCSBikePOCTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val notification = CountdownNotification(applicationContext)
-        notification.startCountdown()
         setContent {
             TCSBikePOCTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                NavGraph()
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TCSBikePOCTheme {
-        Greeting("Android")
-    }
-}

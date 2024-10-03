@@ -2,16 +2,15 @@ package com.felipecoronado.tcsbikepoc.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.core.app.NotificationCompat
+import com.felipecoronado.tcsbikepoc.MainActivity
 import com.felipecoronado.tcsbikepoc.R
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class CountdownNotification(
     private val context: Context
@@ -36,31 +35,30 @@ class CountdownNotification(
     }
 
 
-    private var countdownJob: Job? = null
-
-
-    fun startCountdown() {
-        countdownJob?.cancel()
-        countdownJob = countdownFlow().onEach {
-            showOrUpdateNotification()
-        }.launchIn(MainScope())
-    }
-
-    private fun countdownFlow(): Flow<Unit> {
-        return flow {
+    fun showNotificationWithDelay() {
+        MainScope().launch {
             delay(5000L)
-            emit(Unit)
+            showNotification()
         }
     }
 
-
-    private fun showOrUpdateNotification() {
+    private fun showNotification() {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentText("Tienes un nuevo mensaje del taller!")
             .setContentTitle("TCS Bike")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
             .build()
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
