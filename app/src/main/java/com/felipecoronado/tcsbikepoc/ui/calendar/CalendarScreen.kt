@@ -4,8 +4,10 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,27 +41,35 @@ fun CalendarScreen(
             .fillMaxSize()
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
+
+        Spacer(modifier = Modifier.height(25.dp))
         Image(
             painter = painterResource(id = R.drawable.ic_logo_white),
             contentDescription = "Logo",
             modifier = Modifier
-                .size(120.dp)
+                .size(150.dp)
+                .padding(top = 16.dp, bottom = 8.dp)
         )
         DatePicker(
             state = datePickerState,
             showModeToggle = false,
             modifier = Modifier
-                .padding(bottom = 8.dp),
+                .padding(bottom = 10.dp),
             title = {
-                Text("Ricardo perezoso")
+                Text("",
+                    fontSize = 0.sp,)
             },
             headline = {
-                Text("Lea la documentacion de los objetos")
+                Text(
+                    text = "Selecciona la fecha del mantenimiento",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                )
             }
         )
-
         Button(
             onClick = {
                 Toast.makeText(
@@ -71,7 +81,6 @@ fun CalendarScreen(
             },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
-                .padding(top = 16.dp)
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
