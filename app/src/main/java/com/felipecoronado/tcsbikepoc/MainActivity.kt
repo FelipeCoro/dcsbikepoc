@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.felipecoronado.tcsbikepoc.ui.navigation.Screens
+import com.felipecoronado.tcsbikepoc.ui.rodadas.RodadasScreen
 import com.felipecoronado.tcsbikepoc.ui.theme.DCSBikePOCTheme
 
 class MainActivity : ComponentActivity() {

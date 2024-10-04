@@ -3,18 +3,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.felipecoronado.tcsbikepoc.ui.bikeinfo.BikeInfoScreen
 import com.felipecoronado.tcsbikepoc.ui.calendar.CalendarScreen
 import com.felipecoronado.tcsbikepoc.ui.login.LoginScreen
 import com.felipecoronado.tcsbikepoc.ui.navigation.Screens
+import com.felipecoronado.tcsbikepoc.ui.rodadas.RodadaDetailsScreen
+import com.felipecoronado.tcsbikepoc.ui.rodadas.RodadasScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
 
 
-    NavHost(navController = navController, startDestination = Screens.Login.route) {
+    NavHost(navController = navController, startDestination = Screens.Rodadas.route) {
 
         composable(Screens.Login.route) {
             LoginScreen {
@@ -34,6 +35,26 @@ fun NavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val hasNotifications = backStackEntry.arguments?.getBoolean("hasBike") ?: false
             BikeInfoScreen(hasNotifications)
+        }
+
+        composable(Screens.Rodadas.route) {
+            RodadasScreen(navController)
+        }
+
+        composable(
+            "${Screens.RodadasDetails.route}/{sitio}/{hora}/{dificultad}/{image}",
+            arguments = listOf(
+                navArgument("sitio") { type = NavType.IntType },
+                navArgument("hora") { type = NavType.IntType },
+                navArgument("dificultad") { type = NavType.IntType },
+                navArgument("image") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val sitio = backStackEntry.arguments?.getInt("sitio") ?: 0
+            val hora = backStackEntry.arguments?.getInt("hora") ?: 0
+            val dificultad = backStackEntry.arguments?.getInt("dificultad") ?: 0
+            val image = backStackEntry.arguments?.getInt("image") ?: 0
+            RodadaDetailsScreen(sitio, hora, dificultad, image)
         }
     }
 }
