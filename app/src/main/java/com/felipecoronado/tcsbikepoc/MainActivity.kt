@@ -6,10 +6,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.felipecoronado.tcsbikepoc.ui.navigation.BottomNavigationBar
 import com.felipecoronado.tcsbikepoc.ui.navigation.Screens
-import com.felipecoronado.tcsbikepoc.ui.rodadas.RodadasScreen
 import com.felipecoronado.tcsbikepoc.ui.theme.DCSBikePOCTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +25,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             DCSBikePOCTheme {
                 val navController = rememberNavController()
-                NavGraph(navController)
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Box(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        NavGraph(navController)
+                    }
+                    if (currentRoute != Screens.Login.route) {
+                        BottomNavigationBar(navController = navController)
+                    }
+                }
+
                 handleIntent(intent, navController)
             }
         }
@@ -27,7 +48,6 @@ class MainActivity : ComponentActivity() {
 
     private fun handleIntent(intent: Intent, navController: NavHostController) {
         when (intent.action) {
-
             "WORKSHOP_NOTIFICATION" -> {
                 val hasBike = intent.getBooleanExtra("show_workshop_notifications", false)
                 navController.navigate("${Screens.BikeInfo.route}/$hasBike")
@@ -35,4 +55,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

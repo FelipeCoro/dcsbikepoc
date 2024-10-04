@@ -15,7 +15,7 @@ import com.felipecoronado.tcsbikepoc.ui.rodadas.RodadasScreen
 fun NavGraph(navController: NavHostController) {
 
 
-    NavHost(navController = navController, startDestination = Screens.Rodadas.route) {
+    NavHost(navController = navController, startDestination = Screens.Login.route) {
 
         composable(Screens.Login.route) {
             LoginScreen {
