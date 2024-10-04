@@ -44,6 +44,8 @@ class CountdownNotification(
 
     private fun showNotification() {
         val intent = Intent(context, MainActivity::class.java).apply {
+            action = "WORKSHOP_NOTIFICATION"
+            putExtra("show_workshop_notifications", true)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
@@ -62,7 +64,6 @@ class CountdownNotification(
             .build()
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
-
     companion object {
         const val CHANNEL_ID = "tcsbike"
         const val CHANNEL_NAME = "TCSBike"

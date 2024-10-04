@@ -1,10 +1,14 @@
 package com.felipecoronado.tcsbikepoc
 
 import NavGraph
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.felipecoronado.tcsbikepoc.ui.navigation.Screens
 import com.felipecoronado.tcsbikepoc.ui.theme.DCSBikePOCTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,8 +16,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            DCSBikePOCTheme() {
-                NavGraph()
+            DCSBikePOCTheme {
+                val navController = rememberNavController()
+                NavGraph(navController)
+                handleIntent(intent, navController)
+            }
+        }
+    }
+
+    private fun handleIntent(intent: Intent, navController: NavHostController) {
+        when (intent.action) {
+
+            "WORKSHOP_NOTIFICATION" -> {
+                val hasBike = intent.getBooleanExtra("show_workshop_notifications", false)
+                navController.navigate("${Screens.BikeInfo.route}/$hasBike")
             }
         }
     }
