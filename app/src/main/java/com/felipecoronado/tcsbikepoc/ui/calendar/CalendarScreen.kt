@@ -51,7 +51,13 @@ fun CalendarScreen(
             state = datePickerState,
             showModeToggle = false,
             modifier = Modifier
-                .padding(bottom = 8.dp)
+                .padding(bottom = 8.dp),
+            title = {
+                Text("Ricardo perezoso")
+            },
+            headline = {
+                Text("Lea la documentacion de los objetos")
+            }
         )
 
         Button(
