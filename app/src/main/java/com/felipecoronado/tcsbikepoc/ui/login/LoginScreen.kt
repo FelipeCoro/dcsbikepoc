@@ -79,7 +79,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = passwordState,
             onValueChange = { passwordState = it },
-            label = { Text("Password") },
+            label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
@@ -102,12 +102,12 @@ fun LoginScreen(
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp))
             } else {
-                Text("Login", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text("Ingresar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         }
 
         Text(
-            text = "Don't have an account? Sign Up ",
+            text = "No tienes cuenta? Registrate ",
             color = GreenTCS,
             modifier = Modifier
                 .padding(top = 10.dp)
