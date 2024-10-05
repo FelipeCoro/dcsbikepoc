@@ -2,6 +2,7 @@ package com.felipecoronado.tcsbikepoc.ui.bikeinfo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,17 +13,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,6 +63,9 @@ fun BikeInfoScreen(
 
     val context = LocalContext.current
     val notification = CountdownNotification(context)
+    var showDialog by remember { mutableStateOf(false) }
+    var checkBox by remember { mutableStateOf(false) }
+
     val state by rememberSaveable(
         stateSaver = mapSaver(
             save = { mapOf("hasNotifications" to it.hasNotifications, "bikeData" to it.bikeData) },
@@ -140,7 +149,7 @@ fun BikeInfoScreen(
             Row(Modifier.padding(top = 24.dp)) {
                 Text(text = "Total:", fontSize = 24.sp)
                 Spacer(modifier = Modifier.weight(1f))
-                Text("$80.000", fontSize = 24.sp)
+                Text(text = if (checkBox) "$160.000" else "$80.000", fontSize = 24.sp)
             }
 
             HorizontalDivider(thickness = 1.dp)
@@ -156,17 +165,22 @@ fun BikeInfoScreen(
                     Row(
                         modifier = Modifier
                             .padding(top = 12.dp)
-                            .border(1.dp, Color.Red),
+                            .border(1.dp, color = if (checkBox) GreenTCS else Color.Red),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             "Se te daño x de tu bicicleta: $80.000",
                             fontSize = 18.sp,
-                            modifier = Modifier.padding(start = 6.dp).weight(1f)
+                            modifier = Modifier
+                                .padding(start = 6.dp)
+                                .weight(1f)
+                                .clickable {
+                                    showDialog = true
+                                }
                         )
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = {  }
+                            checked = checkBox,
+                            onCheckedChange = { }
                         )
                     }
                     Row(
@@ -178,11 +192,14 @@ fun BikeInfoScreen(
                         Text(
                             "Se te daño y de tu bicicleta: $50.000",
                             fontSize = 18.sp,
-                            modifier = Modifier.padding(start = 6.dp).weight(1f)
+                            modifier = Modifier
+                                .padding(start = 6.dp)
+                                .weight(1f)
+
                         )
                         Checkbox(
                             checked = true,
-                            onCheckedChange = {  }
+                            onCheckedChange = { }
                         )
                     }
                 } else {
@@ -195,6 +212,19 @@ fun BikeInfoScreen(
             }
         }
 
+        if (showDialog) {
+            DefaultDialog(
+                onConfirm = {
+                    checkBox = true
+                    showDialog = false
+                },
+                onDismiss = {
+                    showDialog = false
+                },
+                title = "Cambio Piñon",
+                text = "Se visualiza desgaste en uno de los dientes del tercer disco del piñon trasero."
+            )
+        }
 
 
         FloatingActionButton(
@@ -204,12 +234,41 @@ fun BikeInfoScreen(
                 .align(Alignment.BottomEnd)
                 .padding(top = 16.dp, bottom = 48.dp, end = 16.dp)
         ) {
-            Text("")
+            Icon(
+                painter = painterResource(R.drawable.telephone_handle_silhouette),
+                modifier = Modifier.size(24.dp),
+                contentDescription = null
+            )
         }
 
     }
 }
 
+@Composable
+fun DefaultDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+    title: String,
+    text: String,
+    confirmText: String = "Agregar",
+    dismissText: String = "Cancelar"
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = { Text(text = text, fontSize = 22.sp) },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text(confirmText)
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text(dismissText)
+            }
+        }
+    )
+}
 
 @Preview
 @Composable
