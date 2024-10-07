@@ -9,6 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -25,23 +27,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             DCSBikePOCTheme {
                 val navController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+                Scaffold(
+                    bottomBar = {
+                        BottomNavigationBar(navController)
+                    }
+                ) { padding ->
 
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Box(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        NavGraph(navController)
-                    }
-                    if (currentRoute != Screens.Login.route) {
-                        BottomNavigationBar(navController = navController)
-                    }
+                    NavGraph(navController)
+                    handleIntent(intent, navController)
                 }
-
-                handleIntent(intent, navController)
             }
         }
     }
