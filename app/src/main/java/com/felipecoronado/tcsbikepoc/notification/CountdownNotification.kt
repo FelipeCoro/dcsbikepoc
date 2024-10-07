@@ -57,7 +57,7 @@ class CountdownNotification(
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentText("Tienes un nuevo mensaje del taller!")
             .setContentTitle("DCS Bike")
-            .setSmallIcon(R.drawable.ic_logo_clipped)
+            .setSmallIcon(R.drawable.ic_repair)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)

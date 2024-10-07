@@ -58,8 +58,15 @@ fun RodadasScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(8) {
-                Rodada(random) { sitio, hora, dificultad, image ->
+            val rodada = listOf(
+                RodadaInfo("Verjon", "7:00", "4", R.drawable.img1),
+                RodadaInfo("Patios", "8:00", "2", R.drawable.img2),
+                RodadaInfo("Cuchilla", "6:00", "6",R.drawable.img3),
+                RodadaInfo("Sisga", "5:30", "6",R.drawable.img4)
+            )
+
+            items(rodada.size) {
+                Rodada(rodada[it]) { sitio, hora, dificultad, image ->
                     navController.navigate("${Screens.RodadasDetails.route}/$sitio/$hora/$dificultad/$image")
                 }
             }
@@ -68,21 +75,10 @@ fun RodadasScreen(navController: NavHostController) {
 }
 
 @Composable
-fun Rodada(random: Random, onClick: (Int, Int, Int, Int) -> Unit) {
-    val sitio = random.nextInt(100) + 1
-    val hora = random.nextInt(12) + 1
-    val dificultad = random.nextInt(10) + 1
-
-    val imageResources = listOf(
-        R.drawable.img1,
-        R.drawable.img2,
-        R.drawable.img3,
-        R.drawable.img4
-    )
-    val randomImage = imageResources[random.nextInt(imageResources.size)]
+fun Rodada(rodada: RodadaInfo, onClick: (String, String, String, Int) -> Unit) {
 
     Card(
-        onClick = { onClick(sitio, hora, dificultad, randomImage) },
+        onClick = { onClick(rodada.sitio, rodada.hora, rodada.dificultad, rodada.image) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(6.dp),
@@ -94,20 +90,28 @@ fun Rodada(random: Random, onClick: (Int, Int, Int, Int) -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = randomImage),
+                painter = painterResource(id = rodada.image),
                 contentDescription = null,
                 modifier = Modifier.size(80.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
-                    text = "Rodada en sitio $sitio",
+                    text = "Rodada ${rodada.sitio}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
-                Text(text = "Hora salida: $hora:00", fontSize = 16.sp)
-                Text(text = "Dificultad: $dificultad", fontSize = 16.sp)
+                Text(text = "Hora salida: ${rodada.hora}", fontSize = 16.sp)
+                Text(text = "Dificultad: ${rodada.dificultad}", fontSize = 16.sp)
             }
         }
     }
 }
+
+data class RodadaInfo(
+    val sitio: String,
+    val hora: String,
+    val dificultad: String,
+    val image: Int
+)
+

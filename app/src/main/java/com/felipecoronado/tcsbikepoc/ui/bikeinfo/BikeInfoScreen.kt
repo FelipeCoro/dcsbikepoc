@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -60,7 +62,6 @@ data class BikeData(
 fun BikeInfoScreen(
     hasNotifications: Boolean
 ) {
-
     val context = LocalContext.current
     val notification = CountdownNotification(context)
     var showDialog by remember { mutableStateOf(false) }
@@ -80,136 +81,50 @@ fun BikeInfoScreen(
         mutableStateOf(BikeInfoScreenState(hasNotifications = hasNotifications))
     }
 
-
     Box() {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
         ) {
 
-            Card(
+            Image(
+                painter = painterResource(id = R.drawable.ic_logo_white),
+                contentDescription = "Logo",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(6.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_bike_placeholder),
-                        contentDescription = null,
-                        modifier = Modifier.size(80.dp)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(
-                            text = "Scott Aspect 950",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-                        Text(text = "Estado", fontSize = 16.sp)
-                        Text(text = "En Mantenimiento", fontSize = 16.sp, color = Color.Red)
-                    }
-                }
-            }
+                    .padding(top = 16.dp)
+                    .size(100.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(6.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_bike_placeholder),
-                        contentDescription = null,
-                        modifier = Modifier.size(80.dp)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(
-                            text = "Colnago C68",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-                        Text(text = "Estado", fontSize = 16.sp)
-                        Text(text = "Lista para recogida", fontSize = 16.sp, color = GreenTCS)
-                    }
-                }
-            }
+            Spacer(modifier = Modifier.padding(4.dp))
+            BikeCard(
+                name = "Scott Aspect 950",
+                status = "En Mantenimiento",
+                statusColor = Color.Red,
+                imageRes = R.drawable.img_bike_placeholder
+            )
+            BikeCard(
+                name = "Colnago C68",
+                status = "Lista para recogida",
+                statusColor = GreenTCS,
+                imageRes = R.drawable.img_bike_placeholder
+            )
+
             Row(Modifier.padding(top = 24.dp)) {
-                Text(text = "Total:", fontSize = 24.sp)
+                Text(text = "Total:", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = if (checkBox) "$160.000" else "$80.000", fontSize = 24.sp)
+                Text(text = if (checkBox) "$160.000" else "$80.000", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
 
             HorizontalDivider(thickness = 1.dp)
 
-            Column(
-                Modifier.padding(top = 24.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text("Notificaciones de tu taller:", fontSize = 24.sp)
-                if (
-                    state.hasNotifications
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 12.dp)
-                            .border(1.dp, color = if (checkBox) GreenTCS else Color.Red),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "Se te daño x de tu bicicleta: $80.000",
-                            fontSize = 18.sp,
-                            modifier = Modifier
-                                .padding(start = 6.dp)
-                                .weight(1f)
-                                .clickable {
-                                    showDialog = true
-                                }
-                        )
-                        Checkbox(
-                            checked = checkBox,
-                            onCheckedChange = { }
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 12.dp)
-                            .border(1.dp, GreenTCS),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "Se te daño y de tu bicicleta: $50.000",
-                            fontSize = 18.sp,
-                            modifier = Modifier
-                                .padding(start = 6.dp)
-                                .weight(1f)
-
-                        )
-                        Checkbox(
-                            checked = true,
-                            onCheckedChange = { }
-                        )
-                    }
-                } else {
-                    Text(
-                        "No tienes notificaciones",
-                        fontSize = 18.sp,
-                        modifier = Modifier.padding(top = 12.dp)
-                    )
-                }
-            }
+            NotificationsSection(
+                state = state,
+                checkBox = checkBox,
+                onCheckBoxChange = { checkBox = it },
+                onShowDialog = { showDialog = true }
+            )
         }
 
         if (showDialog) {
@@ -221,18 +136,18 @@ fun BikeInfoScreen(
                 onDismiss = {
                     showDialog = false
                 },
-                title = "Cambio Piñon",
-                text = "Se visualiza desgaste en uno de los dientes del tercer disco del piñon trasero."
+                title = "Cambio de pastillas",
+                text = "Se visualiza desgaste en pastillas de frenado delantero."
             )
         }
-
 
         FloatingActionButton(
             onClick = { notification.showNotificationWithDelay() },
             shape = RoundedCornerShape(16.dp),
+            containerColor = GreenTCS,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(top = 16.dp, bottom = 48.dp, end = 16.dp)
+                .padding(bottom = 124.dp, end = 20.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.telephone_handle_silhouette),
@@ -240,9 +155,138 @@ fun BikeInfoScreen(
                 contentDescription = null
             )
         }
-
     }
 }
+
+@Composable
+fun BikeCard(name: String, status: String, statusColor: Color, imageRes: Int) {
+    val borderColor = if (status == "En Mantenimiento") Color.Red else Color.Transparent
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .border(2.dp, borderColor, shape = RoundedCornerShape(12.dp)),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = null,
+                modifier = Modifier.size(80.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    text = name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                Text(text = "Estado", fontSize = 16.sp)
+                Text(text = status, fontSize = 16.sp, color = statusColor)
+            }
+        }
+    }
+}
+
+@Composable
+fun NotificationsSection(
+    state: BikeInfoScreenState,
+    checkBox: Boolean,
+    onCheckBoxChange: (Boolean) -> Unit,
+    onShowDialog: () -> Unit
+) {
+    Column(
+        Modifier.padding(top = 24.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text("Notificaciones de tu taller:", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        if (state.hasNotifications) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Se requiere cammbio de pastillas: $80.000",
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .weight(1f)
+                        .clickable { onShowDialog() }
+                )
+                androidx.compose.material3.Switch(
+                    checked = checkBox,
+                    onCheckedChange = onCheckBoxChange,
+                    colors = androidx.compose.material3.SwitchDefaults.colors(
+                        checkedThumbColor = GreenTCS,
+                        uncheckedThumbColor = Color.Red,
+                        checkedTrackColor = Color.LightGray,
+                        uncheckedTrackColor = Color.Transparent
+                    )
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Se requiere cambio de guayas: $50.000",
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .weight(1f)
+                )
+
+                androidx.compose.material3.Switch(
+                    checked = true,
+                    onCheckedChange = { },
+                    colors = androidx.compose.material3.SwitchDefaults.colors(
+                        checkedThumbColor = GreenTCS,
+                        uncheckedThumbColor = Color.Red,
+                        checkedTrackColor = Color.LightGray,
+                        uncheckedTrackColor = Color.Transparent
+                    )
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Se requiere cambio de guayas: $50.000",
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .weight(1f)
+                )
+
+                androidx.compose.material3.Switch(
+                    checked = true,
+                    onCheckedChange = { },
+                    colors = androidx.compose.material3.SwitchDefaults.colors(
+                        checkedThumbColor = GreenTCS,
+                        uncheckedThumbColor = Color.Red,
+                        checkedTrackColor = Color.LightGray,
+                        uncheckedTrackColor = Color.Transparent
+                    )
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun DefaultDialog(
@@ -255,20 +299,65 @@ fun DefaultDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title) },
-        text = { Text(text = text, fontSize = 22.sp) },
+        icon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_repair),
+                contentDescription = "Alerta",
+                tint = Color.Red,
+                modifier = Modifier.size(40.dp)
+            )
+        },
+        title = {
+            Text(
+                title,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        },
+        text = {
+            Text(
+                text = text,
+                fontSize = 16.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        },
         confirmButton = {
-            Button(onClick = onConfirm) {
-                Text(confirmText)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = onConfirm,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = GreenTCS,
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                ) {
+                    Text(confirmText, fontSize = 18.sp)
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Gray,
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                ) {
+                    Text(dismissText, fontSize = 18.sp)
+                }
             }
         },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text(dismissText)
-            }
-        }
+        shape = RoundedCornerShape(16.dp),
+        containerColor = Color(0xFFEAEAEA)
     )
 }
+
 
 @Preview
 @Composable

@@ -72,11 +72,6 @@ fun CalendarScreen(
         )
         Button(
             onClick = {
-                Toast.makeText(
-                    context,
-                    "Fecha guardada: ${datePickerState.selectedDateMillis?.let { java.util.Date(it) }}",
-                    Toast.LENGTH_SHORT
-                ).show()
                 onChosenDate()
             },
             shape = RoundedCornerShape(16.dp),

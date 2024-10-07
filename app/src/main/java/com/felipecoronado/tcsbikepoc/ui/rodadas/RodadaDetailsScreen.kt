@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun RodadaDetailsScreen(sitio: Int, hora: Int, dificultad: Int, image: Int) {
+fun RodadaDetailsScreen(sitio: String, hora: String, dificultad: String, image: Int) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,24 +37,31 @@ fun RodadaDetailsScreen(sitio: Int, hora: Int, dificultad: Int, image: Int) {
             modifier = Modifier.size(200.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Rodada en sitio: $sitio")
-        Text("Hora salida: $hora:00")
-        Text("Dificultad: $dificultad")
+        Column(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Rodada en sitio: $sitio")
+            Text("Hora salida: $hora")
+            Text("Dificultad: $dificultad")
+        }
 
         Button(
             onClick = {
             },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(start = 56.dp, end = 56.dp, top = 12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 "Inscribirme",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
+
 
 }

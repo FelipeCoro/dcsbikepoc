@@ -44,17 +44,17 @@ fun NavGraph(navController: NavHostController) {
         composable(
             "${Screens.RodadasDetails.route}/{sitio}/{hora}/{dificultad}/{image}",
             arguments = listOf(
-                navArgument("sitio") { type = NavType.IntType },
-                navArgument("hora") { type = NavType.IntType },
-                navArgument("dificultad") { type = NavType.IntType },
+                navArgument("sitio") { type = NavType.StringType },
+                navArgument("hora") { type = NavType.StringType },
+                navArgument("dificultad") { type = NavType.StringType },
                 navArgument("image") { type = NavType.IntType }
             )
         ) { backStackEntry ->
-            val sitio = backStackEntry.arguments?.getInt("sitio") ?: 0
-            val hora = backStackEntry.arguments?.getInt("hora") ?: 0
-            val dificultad = backStackEntry.arguments?.getInt("dificultad") ?: 0
+            val sitio = backStackEntry.arguments?.getString("sitio") ?: 0
+            val hora = backStackEntry.arguments?.getString("hora") ?: 0
+            val dificultad = backStackEntry.arguments?.getString("dificultad") ?: 0
             val image = backStackEntry.arguments?.getInt("image") ?: 0
-            RodadaDetailsScreen(sitio, hora, dificultad, image)
+            RodadaDetailsScreen(sitio.toString(), hora.toString(), dificultad.toString(), image)
         }
     }
 }
